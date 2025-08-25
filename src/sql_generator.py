@@ -1,4 +1,4 @@
-from groq import Groq
+from langchain_groq import ChatGroq
 import logging
 import streamlit as st
 from src.utils import extract_sql
@@ -6,7 +6,7 @@ from src.utils import extract_sql
 logger = logging.getLogger(__name__)
 
 def generate_sql_query(
-    client: Groq,
+    groq_api_key: str,
     template: str,
     schema: str,
     question: str,
@@ -15,21 +15,20 @@ def generate_sql_query(
     temperature: float = 0.0,
     max_tokens: int = 512
 ) -> str:
-    """Generate SQL query using the Groq model."""
+    """Generate SQL query using the Groq model via LangChain."""
     if not template or not schema:
         return ""
     
     prompt = template.format(schema=schema, question=question, dialect=dialect)
     try:
-        completion = client.chat.completions.create(
+        llm = ChatGroq(
+            groq_api_key=groq_api_key,
             model=model,
-            messages=[{"role": "user", "content": prompt}],
             temperature=temperature,
-            max_tokens=max_tokens,
-            top_p=1.0,
-            stream=False
+            max_tokens=max_tokens
         )
-        raw_response = completion.choices[0].message.content.strip()
+        response = llm.invoke(prompt)
+        raw_response = response.content.strip()
         logger.debug(f"Raw model response: {raw_response}")
         return extract_sql(raw_response)
     except Exception as e:
