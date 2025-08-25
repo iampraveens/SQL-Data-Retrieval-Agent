@@ -8,9 +8,9 @@ logger = logging.getLogger(__name__)
 
 def execute_sql(engine: Engine, query: str) -> Tuple[Optional[List[Tuple]], Optional[List[str]]]:
     """Execute SQL query and fetch results."""
-    if not query.strip().upper().startswith("SELECT"):
-        st.error("Only SELECT queries are allowed for safety.")
-        return None, None
+    # if not query.strip().upper().startswith("SELECT"):
+    #     st.error("Only SELECT queries are allowed for safety.")
+    #     return None, None
     
     with engine.connect() as conn:
         try:
