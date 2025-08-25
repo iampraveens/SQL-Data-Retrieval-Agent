@@ -1,7 +1,6 @@
 from typing import List, Tuple, Optional
 import matplotlib.pyplot as plt
 from sqlalchemy import create_engine
-from groq import Groq
 from src.schema_loader import load_db_schema, load_prompt_template
 from src.sql_generator import generate_sql_query
 from src.query_executor import execute_sql
@@ -12,14 +11,13 @@ class QueryPipeline:
     """Orchestrates the query processing pipeline."""
     def __init__(self):
         self.engine = create_engine(DATABASE_URI)
-        self.client = Groq(api_key=GROQ_API_KEY)
         self.schema = load_db_schema(self.engine, sample_size=SAMPLE_SIZE)
         self.template = load_prompt_template(PROMPT_TEMPLATE_FILE)
     
     def process_query(self, question: str) -> Tuple[str, Optional[List[Tuple]], Optional[List[str]], Optional[str], Optional[plt.Figure]]:
         """Process a natural language query and return SQL, results, and visualization."""
         sql_query = generate_sql_query(
-            self.client,
+            GROQ_API_KEY,
             self.template,
             self.schema,
             question,
