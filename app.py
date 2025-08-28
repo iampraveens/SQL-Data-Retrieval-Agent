@@ -22,7 +22,7 @@ def main():
     st.sidebar.write("Ensure .env file contains DATABASE_URI and GROQ_API_KEY.")
     
     # Main content
-    st.title("SQL Query Visualizer")
+    st.title("SQL Data Retrieval Agent")
     st.markdown("Chat with the app to generate SQL queries and visualize results!")
     
     # Initialize session state for chat history
